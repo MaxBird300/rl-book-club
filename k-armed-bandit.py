@@ -117,6 +117,7 @@ def simulate_rl_performance(k_bandits: int, epsilon: float, N_steps: int, N_runs
         
     run_rewards_df = pd.DataFrame(all_run_rewards).T # index is N_steps, columns are N_runs
     average_rewards = run_rewards_df.mean(axis=1)
+
     
     return average_rewards
 
@@ -145,11 +146,11 @@ for epsilon in epsilons:
     
 plot_average_rewards(all_average_rewards, epsilons, k_bandits)
 
+data = pd.concat(all_average_rewards, axis=1)
+data.columns = epsilons
 
 
-
-
-
+data.to_csv("k-armed-bandit-results.csv")
 
 
 
