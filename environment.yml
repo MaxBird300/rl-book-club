@@ -4,6 +4,8 @@ channels:
   - defaults
 dependencies:
   - python=3.9
+  - spyder=5.3.3
   - pandas
   - matplotlib
   - scipy
+  - ffmpeg-python
