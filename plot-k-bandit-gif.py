@@ -37,6 +37,7 @@ def plot_average_rewards_animation(reward_df):
     ax.set_ylim(0,1.5)
     ax.set_ylabel("Average Reward")
     ax.set_xlabel("Steps")
+    ax.set_title("\u03B5-greedy, 10-armed testbed")
     
     ani = animation.FuncAnimation(fig, animate, fargs=(x, ys, lines), frames=len(reward_df), interval=10, blit=True)
     
@@ -56,12 +57,13 @@ def plot_optimal_action_percentage(optimal_action_df: pd.DataFrame):
     ax.set_ylim(0,100)
     ax.set_ylabel("Optimal Action [%]")
     ax.set_xlabel("Steps")
+    ax.set_title("\u03B5-greedy, 10-armed testbed")
     
     ani = animation.FuncAnimation(fig, animate, fargs=(x, ys, lines), frames=len(optimal_action_df), interval=10, blit=True)
     
     return ani
 
-
+# k-bandits for different epsilon values
 read_folder = './rl_run_data/'
 reward_df = pd.read_csv(f"{read_folder}k-armed-bandit-average-rewards.csv", index_col=0)
 optimal_action_df = pd.read_csv(f"{read_folder}k-armed-bandit-optimal-action-percent.csv", index_col=0)
@@ -73,8 +75,9 @@ save_animation(reward_ani, save_path=f"{read_folder}average_reward_animation.mp4
 save_animation(optimal_action_ani, save_path=f"{read_folder}optimal_action_animation.mp4")
 
 
-
-
+# changing initial value estimations
+# real_optimal_action_df = pd.read_csv(f"{read_folder}realistic-k-armed-bandit-optimal-action-percent.csv", index_col=0)
+# optimistic_optimal_action_df = 
 
 
 

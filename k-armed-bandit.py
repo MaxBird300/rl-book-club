@@ -36,14 +36,14 @@ class Bandit:
         return norm.rvs(loc = self.mu, scale = self.sigma, size=1)[0]
 
 class BanditRL:
-    def __init__(self, epsilon: float, k_bandits: int):
+    def __init__(self, epsilon: float, k_bandits: int, q_init: float=0.):
         self.epsilon = epsilon # probability of exploring [0,1]
         self.k_bandits = k_bandits # number of bandits
         
         # initialise N(a) and Q(a) as 0 for every bandit
         # these lists are updated after each learning step
         self.num_bandit_selections = [0 for bandit in range(k_bandits)] # N(a)
-        self.bandit_values = [0 for bandit in range(k_bandits)] # Q(a)
+        self.bandit_values = [q_init for bandit in range(k_bandits)] # Q(a)
     
     def choose_action(self) -> int:
         """ 
@@ -87,7 +87,7 @@ class BanditRL:
         self._update_num_bandit_selections(action)
 
 
-def simulate_rl_performance(k_bandits: int, epsilon: float, N_steps: int, N_runs: int):
+def simulate_rl_performance(k_bandits: int, epsilon: float, N_steps: int, N_runs: int, q_init: float):
     """
     Simulate the average performance of epsilon-greedy RL algorithm to learn 
     solution to k-bandits problem.
@@ -107,7 +107,7 @@ def simulate_rl_performance(k_bandits: int, epsilon: float, N_steps: int, N_runs
         bandits = [Bandit(mean, std_dev=1) for mean in bandit_means]
         optimal_action = bandit_means.argmax()
         # define RL instance
-        bandit_rl = BanditRL(epsilon, k_bandits)
+        bandit_rl = BanditRL(epsilon, k_bandits, q_init)
         
         rewards_for_run_n = []
         optimal_action_bool_for_run_n = []
@@ -151,7 +151,9 @@ def plot_average_rewards(average_rewards: list, epsilons: list, k_bandits: int):
 k_bandits = 10
 N_steps = 1000
 N_runs = 2000
-epsilons = [0, 0.01, 0.1]
+q_init = 5
+epsilons = [0, 0.01, 0.1, 0.5]
+# epsilon = 0
 save_folder = './rl_run_data/'
 
 
@@ -159,10 +161,10 @@ all_average_rewards = []
 all_optimal_action_percents = []
 
 for epsilon in epsilons:
-    average_rewards, optimal_action_percent = simulate_rl_performance(k_bandits, epsilon, N_steps, N_runs)
+    average_rewards, optimal_action_percent = simulate_rl_performance(k_bandits, epsilon, N_steps, N_runs, q_init)
     all_average_rewards.append(average_rewards)
     all_optimal_action_percents.append(optimal_action_percent)
-    
+        
 plot_average_rewards(all_average_rewards, epsilons, k_bandits)
 
 average_rewards = pd.concat(all_average_rewards, axis=1)
